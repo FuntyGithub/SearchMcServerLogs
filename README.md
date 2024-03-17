@@ -1,6 +1,6 @@
 # Search MC-Server Logs
-1. Download the whole ``logs`` folder from your server.
-2. Run ``node .``.
+1. Download the whole ``logs`` folder from your server
+2. Run ``node .``
 3. Enter your answers for the questions you will get in the command line 
    - ``"What folder do you want to search in?"`` => The path to the folder you just donwloaded in step 1.
    - ``"What string do you want to search for?"`` => The text you want to search for.
