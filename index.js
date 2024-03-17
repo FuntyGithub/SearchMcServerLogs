@@ -13,11 +13,12 @@ async function processGzipFile(filePath) {
     });
 
     const outputLines = [];
+    let fileName = filePath.split('/').pop() && filePath.split('\\').pop();
     rl.on('line', (line) => {
         if (equalOrContain === 'contain') {
-            if (line.includes(searchString)) outputLines.push(line);
+            if (line.includes(searchString)) outputLines.push(fileName+": "+line);
         } else {
-            if (line === searchString) outputLines.push(line);
+            if (line === searchString) outputLines.push(fileName+": "+line);
         }
     });
 
@@ -48,7 +49,7 @@ async function processFiles(searchFolder) {
 
     if (fs.existsSync(latestLogFile)) {
         const latestLogLines = fs.readFileSync(latestLogFile, 'utf-8').split('\n');
-        allMatchingLines.push(...latestLogLines.filter(line => equalOrContain === 'contain' ? line.includes(searchString) : line === searchString));
+        allMatchingLines.push(...latestLogLines.filter(line => equalOrContain === 'contain' ? line.includes(searchString) : line === searchString).map(line => 'latest.log: '+line));
     }
 
     return allMatchingLines;
