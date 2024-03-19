@@ -1,6 +1,6 @@
-const fs = require('fs');
-const zlib = require('zlib');
-const readline = require('readline');
+const fs = require('node:fs');
+const zlib = require('node:zlib');
+const readline = require('node:readline');
 const glob = require('glob').glob;
 const prompts = require('prompts');
 let equalOrContain, searchString;
@@ -16,9 +16,9 @@ async function processGzipFile(filePath) {
     let fileName = filePath.split('/').pop() && filePath.split('\\').pop();
     rl.on('line', (line) => {
         if (equalOrContain === 'contain') {
-            if (line.includes(searchString)) outputLines.push(fileName+": "+line);
+            if (line.includes(searchString)) outputLines.push(fileName + ": " + line);
         } else {
-            if (line === searchString) outputLines.push(fileName+": "+line);
+            if (line === searchString) outputLines.push(fileName + ": " + line);
         }
     });
 
@@ -42,14 +42,13 @@ async function processFiles(searchFolder) {
 
     const allMatchingLines = [];
     for (const file of gzipFiles) {
-        // console.log(`Processing ${file}`);
         const matchingLines = await processGzipFile(file, searchString);
         allMatchingLines.push(...matchingLines);
     }
 
     if (fs.existsSync(latestLogFile)) {
         const latestLogLines = fs.readFileSync(latestLogFile, 'utf-8').split('\n');
-        allMatchingLines.push(...latestLogLines.filter(line => equalOrContain === 'contain' ? line.includes(searchString) : line === searchString).map(line => 'latest.log: '+line));
+        allMatchingLines.push(...latestLogLines.filter(line => equalOrContain === 'contain' ? line.includes(searchString) : line === searchString).map(line => 'latest.log: ' + line));
     }
 
     return allMatchingLines;
@@ -105,7 +104,7 @@ async function processFiles(searchFolder) {
         equalOrContain = response.equalOrContain;
         const matchingLines = await processFiles(response.searchFolder);
         console.log(`Found ${matchingLines.length} matching lines!`);
-        // fs.writeFileSync(response.outputFile, matchingLines.join('\n'));
+
         fs.writeFileSync(response.outputPath + '/' + response.outputFile, matchingLines.join('\n'));
         console.log(`Matching lines written to ${response.outputFile}.`);
     } catch (error) {
